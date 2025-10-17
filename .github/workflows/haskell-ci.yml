@@ -43,19 +43,3 @@ jobs:
         stack install hlint
         stack exec hlint .
 
-  run-python-scripts:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-
-    - name: Run Python scripts
-        run: |
-          python ${{ github.workspace }}/python_impl/5.py
-          python ${{ github.workspace }}/python_impl/25.py
