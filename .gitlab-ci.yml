@@ -13,7 +13,7 @@ stages:
   - lint-format
   - build-test
 
-.
+
 haskell-lint-format:
   stage: lint-format
   script:
