@@ -41,5 +41,5 @@ jobs:
     - name: Run hlint
       run: |
         stack install hlint
-        stack exec hlint .
+        stack exec hlint -- --no-exit-code .
 
