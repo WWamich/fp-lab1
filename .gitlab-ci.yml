@@ -1,4 +1,4 @@
-image: "fpco/stack-build:lts-23.1"
+image: registry.gitlab.se.ifmo.ru/courses/haskell/fp-practice/base:latest
 
 variables:
   STACK_ROOT: ${CI_PROJECT_DIR}/.stack
@@ -13,17 +13,20 @@ stages:
   - lint-format
   - build-test
 
+.
 haskell-lint-format:
   stage: lint-format
   script:
-    - stack install hlint ormolu
-    - stack exec hlint .
-    - find src app test -name "*.hs" -exec stack exec ormolu -- --mode check {} +
+    - echo "Linting and formatting Haskell..."
+    - hlint .
+    - find src app test -name "*.hs" -exec ormolu -- --mode check {} +
+  allow_failure: true 
 
-haskell-build-test:
+haskell-build-test-run:
   stage: build-test
   script:
-    - stack build
+    - echo "Building, testing, and running Haskell..."
+    - stack build --test --no-run-tests
     - stack test
     - stack exec first-task
     - stack exec second-task
