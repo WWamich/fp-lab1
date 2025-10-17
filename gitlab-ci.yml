@@ -1,0 +1,45 @@
+stages:
+  - lint-format
+  - build-test
+
+image: fpco/stack-build:lts-22.10 
+
+before_script:
+  - stack config set system-ghc --global false
+
+haskell-lint-format:
+  stage: lint-format
+  script:
+    - stack install ormolu hlint
+    - stack exec ormolu -- --mode check .
+    - stack exec hlint .
+
+haskell-unit-test:
+  stage: build-test
+  script:
+    - echo "RUNNING UNIT TESTS."
+    - stack test
+    
+haskell-build-run:
+  stage: build-test
+  script:
+    - echo "BUILDING AND RUNNING EXECUTABLES."
+    - stack build
+    - stack exec first-task
+    - stack exec second-task
+
+python-lint-format:
+  stage: lint-format
+  image: python:3.9
+  before_script:
+    - pip install black flake8
+  script:
+    - black --check python_impl/
+    - flake8 python_impl/
+
+python-run:
+  stage: build-test
+  image: python:3.9
+  script:
+    - python python_impl/5.py
+    - python python_impl/25.py

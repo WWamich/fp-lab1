@@ -1,0 +1,41 @@
+name:                fp-lab1
+version:             0.1.0.0
+github:              "shelley/fp-lab1"
+license:             BSD-3-Clause
+author:              "shelley" 
+maintainer:          "admiral3233@mail.ru"
+
+ghc-options:
+- -Wall
+- -Werror
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  first-task:
+    main:                first-task-main.hs
+    source-dirs:         app
+    ghc-options: [-threaded, -rtsopts, -with-rtsopts=-N]
+    dependencies:
+    - fp-lab1
+
+  second-task:
+    main:                second-task-main.hs
+    source-dirs:         app
+    ghc-options: [-threaded, -rtsopts, -with-rtsopts=-N]
+    dependencies:
+    - fp-lab1
+
+tests:
+  fp-lab1-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options: [-threaded, -rtsopts, -with-rtsopts=-N]
+    dependencies:
+    - fp-lab1
+    - tasty
+    - tasty-hunit

@@ -1,0 +1,14 @@
+.stack-work/
+*.stack-work/
+
+*.o
+*.hi
+
+__pycache__/
+.pytest_cache/
+venv/
+
+.DS_Store
+Thumbs.db
+
+.vscode/
