@@ -8,7 +8,7 @@ module Task25.Solution
 where
 
 fibs :: [Integer]
-fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+fibs = 0 : 1 : zipWith (+) fibs (drop 1 fibs)
 
 -- эталонное значение
 findDigitsFib :: Int -> Int
@@ -42,8 +42,13 @@ findDigitsFib1_1 n = fst $ findFib 0 0 1
 findDigitsFib235 :: Int -> Int
 findDigitsFib235 n =
   let indexed = zip [0 ..] fibs
-   in head $ map fst $ dropWhile (\(_, x) -> x < 10 ^ (n - 1)) indexed
+   in case dropWhile (\(_, x) -> x < 10 ^ (n - 1)) indexed of
+      ((idx, _):_) -> fst (idx, undef)
+      []           -> error "пролёт"
 
 -- спец.синтаксис для циклов
 findDigits4 :: Int -> Int
-findDigits4 n = head [i | (i, fib) <- zip [0 ..] fibs, fib >= 10 ^ (n - 1)]
+findDigits4 n =
+  case [i | (i, fib) <- zip [0 ..] fibs, fib >= 10 ^ (n - 1)] of
+    (idx:_) -> idx
+    []      -> error "пролёт"

@@ -56,6 +56,6 @@ jobs:
         python-version: '3.x'
 
     - name: Run Python scripts
-      run: |
-        python python_impl/5.py
-        python python_impl/25.py
+        run: |
+          python ${{ github.workspace }}/python_impl/5.py
+          python ${{ github.workspace }}/python_impl/25.py
