@@ -1,0 +1,61 @@
+name: Haskell CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest 
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Haskell Stack
+      uses: haskell-actions/setup@v2
+      with:
+        enable-stack: true
+
+    - name: Cache stack directories
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.stack
+          .stack-work
+        key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-stack-
+
+    - name: Install dependencies
+      run: stack build --dependencies-only
+
+    - name: Build project
+      run: stack build
+
+    - name: Run tests
+      run: stack test
+      
+    - name: Run hlint
+      run: |
+        stack install hlint
+        stack exec hlint .
+
+  run-python-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Run Python scripts
+      run: |
+        python python_impl/5.py
+        python python_impl/25.py
