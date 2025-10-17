@@ -43,7 +43,7 @@ findDigitsFib235 :: Int -> Int
 findDigitsFib235 n =
   let indexed = zip [0 ..] fibs
    in case dropWhile (\(_, x) -> x < 10 ^ (n - 1)) indexed of
-      ((idx, _):_) -> fst (idx, undef)
+      ((idx, _):_) -> fst (idx, undefined)
       []           -> error "пролёт"
 
 -- спец.синтаксис для циклов
