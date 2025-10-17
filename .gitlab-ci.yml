@@ -2,44 +2,63 @@ stages:
   - lint-format
   - build-test
 
-image: fpco/stack-build:lts-22.10 
-
-before_script:
-  - stack config set system-ghc --global false
 
 haskell-lint-format:
   stage: lint-format
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update && apt-get install -y curl xz-utils make gcc g++
+    - curl -sSL https://get.haskellstack.org/ | sh
+    - stack config set system-ghc --global false
   script:
-    - stack install ormolu hlint
-    - stack exec ormolu -- --mode check .
+    - echo "Installing formatters and linters..."
+    - stack install ormolu hlint --stack-yaml stack.yaml
+    - echo "Checking formatting with ormolu..."
+    - find src app test -name "*.hs" -exec stack exec ormolu -- --mode check {} +
+    - echo "Linting with hlint..."
     - stack exec hlint .
 
 haskell-unit-test:
   stage: build-test
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update && apt-get install -y curl xz-utils make gcc g++
+    - curl -sSL https://get.haskellstack.org/ | sh
+    - stack config set system-ghc --global false
   script:
-    - echo "RUNNING UNIT TESTS."
+    - echo "Running Haskell unit tests..."
+    - stack build --test --no-run-tests
     - stack test
-    
+
 haskell-build-run:
   stage: build-test
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update && apt-get install -y curl xz-utils make gcc g++
+    - curl -sSL https://get.haskellstack.org/ | sh
+    - stack config set system-ghc --global false
   script:
-    - echo "BUILDING AND RUNNING EXECUTABLES."
+    - echo "Building and running executables for demonstration..."
     - stack build
     - stack exec first-task
     - stack exec second-task
 
+
 python-lint-format:
   stage: lint-format
-  image: python:3.9
+  image: ubuntu:22.04
   before_script:
-    - pip install black flake8
+    - apt-get update && apt-get install -y python3 python3-pip
+    - pip3 install black flake8
   script:
     - black --check python_impl/
     - flake8 python_impl/
 
 python-run:
   stage: build-test
-  image: python:3.9
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update && apt-get install -y python3
   script:
-    - python python_impl/5.py
-    - python python_impl/25.py
+    - python3 python_impl/5.py
+    - python3 python_impl/25.py
